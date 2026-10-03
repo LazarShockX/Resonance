@@ -1,4 +1,4 @@
-/* eslint-disable no-var /*
+/* eslint-disable no-var */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { cn } from "@/lib/utils";

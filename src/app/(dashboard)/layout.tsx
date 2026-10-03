@@ -4,7 +4,7 @@ import { DashboardSidebar } from "@/features/dashboard/components/dashboard-side
 
 export default async function DashboardLayout({ children }: LayoutProps<"/">) {
     const cookieStore = await cookies();
-    const defaultOpen = cookieStore.get("sidebar_state")?.value === "true";
+    const defaultOpen = cookieStore.get("sidebar_state")?.value !== "false"; // Set to "...value === 'true'" if sidebar should be open by default on initial load, "...value !== 'false'" if it should be closed
     
     return (
         <SidebarProvider defaultOpen={defaultOpen} className="h-svh">
