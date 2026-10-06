@@ -63,8 +63,8 @@ export function TextInputPanel() {
                             </p>
                             <GenerateButton
                                 size="sm"
-                                disabled={isSubmitting}
-                                isSubmitting={isSubmitting || !isValid}
+                                disabled={isSubmitting || !isValid}
+                                isSubmitting={isSubmitting}
                                 onSubmit={() => form.handleSubmit()}
                             />
                         </div>
