@@ -39,7 +39,7 @@ function NavSection({ label, items, pathname }: NavSectionProps) {
                                 onClick={item.onClick}
                                 render={item.url ? <Link href={item.url} /> : undefined}
                                 tooltip={item.title}
-                                className="h-9 px-3 py-2 text-[13px] tracking-tight font-medium border border-transparent data-[active=true]:border-border data-[active=true]:shadow-[0px_1px_1px_0px_rgba(44,54,53,0.03),inset_0px_0px_0px_2px_white]"
+                                className="h-9 px-3 py-2 text-[13px] tracking-tight font-medium border border-transparent data-active:border-border data-active:shadow-[0px_1px_1px_0px_rgba(44,54,53,0.03),inset_0px_0px_0px_2px_white]"
                             >
                                 <item.icon />
                                 <span>
