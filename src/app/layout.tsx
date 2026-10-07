@@ -4,6 +4,7 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/toast";
 import { ClerkProvider } from "@clerk/nextjs";
+import { TRPCReactProvider } from "@/trpc/client";
 
 const inter = Inter({
   variable:'--font-inter',
@@ -31,8 +32,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body>
         <ClerkProvider>
-          {children}
-          <Toaster />
+          <TRPCReactProvider>
+            {children}
+            <Toaster />
+          </TRPCReactProvider>
         </ClerkProvider>
       </body>
     </html>
