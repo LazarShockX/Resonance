@@ -1,7 +1,12 @@
 "use client";
 
 import { z } from "zod";
+import { toast } from "@/components/ui/toast";
+import { useRouter } from "next/navigation";
 import { formOptions } from "@tanstack/react-form";
+import { useMutation } from "@tanstack/react-query";
+
+import { useTRPC } from "@/trpc/client";
 import { useAppForm } from "@/hooks/use-app-form";
 
 const ttsFormSchema = z.object({
@@ -29,14 +34,41 @@ export const ttsFormOptions = formOptions({
 });
 
 export function TextToSpeechForm({ children, defaultValues }: { children: React.ReactNode; defaultValues?: TTSFormValues }) {
+    const trpc = useTRPC();
+    const router = useRouter();
+    const createMutation = useMutation(trpc.generations.create.mutationOptions({}));
+
     const form = useAppForm({
         ...ttsFormOptions,
         defaultValues: defaultValues || defaultTTSValues,
         validators: {
             onSubmit: ttsFormSchema,
         },
-        onSubmit: async () => {
-            // Generation logic will be added later
+        onSubmit: async ({ value }) => {
+            try {
+                const data = await createMutation.mutateAsync({
+                    text: value.text,
+                    voiceId: value.voiceId,
+                    temperature: value.temperature,
+                    topP: value.topP,
+                    topK: value.topK,
+                    repetitionPenalty: value.repetitionPenalty,
+                });
+
+                toast.add({
+                    title: "Generation successful",
+                    description: "Audio generated successfully",
+                    type: "success",
+                });
+                router.push(`/text-to-speech/${data.id}`);
+            } catch (error) {
+                const message = error instanceof Error ? error.message : "Failed to generate audio";
+                toast.add({
+                    title: "Generation failed",
+                    description: message,
+                    type: "error",
+                });
+            }
         }
     });
 
