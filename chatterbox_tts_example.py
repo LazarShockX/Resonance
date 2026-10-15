@@ -114,12 +114,10 @@ class Chatterbox:
 
         @web_app.post("/generate", responses={200: {"content": {"audio/wav": {}}}})
         def generate_speech(request: TTSRequest):
-            voice_path = Path(R2_MOUNT_PATH) / request.voice_key
-            if not voice_path.exists():
-                raise HTTPException(
-                    status_code=400,
-                    detail=f"Voice not found at '{request.voice_key}'",
-                )
+            r2_root = Path(R2_MOUNT_PATH).resolve()
+            voice_path = (r2_root / request.voice_key).resolve()
+            if not voice_path.is_relative_to(r2_root) or not voice_path.is_file():
+                raise HTTPException(status_code=400, detail="Voice not found")
 
             try:
                 audio_bytes = self.generate.local(

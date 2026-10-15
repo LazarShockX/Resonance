@@ -33,7 +33,11 @@ export function useWaveSurfer({ url, autoplay, onReady, onError }: UseWaveSurfer
     const [duration, setDuration] = useState(0);
 
     useEffect(() => {
-        if (!containerRef.current || !url) return;
+        setIsReady(false);
+        setIsPlaying(false);
+        setCurrentTime(0);
+        setDuration(0);
+        if (isMobile || !containerRef.current || !url) return;
 
         if (wavesurferRef.current) {
             wavesurferRef.current.destroy();
