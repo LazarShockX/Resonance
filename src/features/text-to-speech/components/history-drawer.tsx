@@ -17,7 +17,7 @@ export function HistoryDrawer() {
             />
             <DrawerContent>
                 <DrawerHeader>
-                    <DrawerTitle>
+                    <DrawerTitle className="text-lg font-semibold">
                         History
                     </DrawerTitle>
                 </DrawerHeader>
