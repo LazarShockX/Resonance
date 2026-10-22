@@ -1,19 +1,42 @@
 "use client";
 
+import { useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
+import { toast } from "@/components/ui/toast";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { VoiceCreateForm } from "./voice-create-form";
+import { useCheckout } from "@/features/billing/hooks/use-checkout";
 
 interface VoiceCreateDialogProps {
-    children: React.ReactElement;
+    children?: React.ReactElement;
     open?: boolean;
     onOpenChange?: (open: boolean) => void;
 }
 
 export function VoiceCreateDialog({ children, open, onOpenChange }: VoiceCreateDialogProps) {
     const isMobile = useIsMobile();
+
+    const { checkout } = useCheckout();
+
+    const handleError = useCallback((message: string) => {
+        if (message === "SUBSCRIPTION_REQUIRED") {
+            toast.add({
+                title: "Subscription required",
+                type: "error",
+                actionProps: {
+                    children: "Subscribe",
+                    onClick: () => checkout(),
+                },
+            });
+        } else {
+            toast.add({
+                title: message,
+                type: "error",
+            });
+        }
+    }, [checkout]);
 
     if (isMobile) {
         return (
@@ -30,6 +53,7 @@ export function VoiceCreateDialog({ children, open, onOpenChange }: VoiceCreateD
                     </DrawerHeader>
                     <VoiceCreateForm
                         scrollable
+                        onError={handleError}
                         footer={(submit) => (
                             <DrawerFooter>
                                 {submit}
@@ -59,7 +83,7 @@ export function VoiceCreateDialog({ children, open, onOpenChange }: VoiceCreateD
                         Upload or record an audio sample to add a new voice to your library.
                     </DialogDescription>
                 </DialogHeader>
-                <VoiceCreateForm scrollable />
+                <VoiceCreateForm scrollable onError={handleError} />
             </DialogContent>
         </Dialog>
     );

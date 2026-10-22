@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -8,6 +9,8 @@ import { type LucideIcon, AudioLines, Headphones, Home, LayoutGrid, Settings, Vo
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarRail, SidebarTrigger } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { OrganizationSwitcher, UserButton, useClerk } from "@clerk/nextjs";
+import { UsageContainer } from "@/features/billing/components/usage-container";
+import { VoiceCreateDialog } from "@/features/voices/components/voice-create-dialog";
 
 interface MenuItem {
     title: string;
@@ -58,6 +61,8 @@ export function DashboardSidebar() {
     const pathname = usePathname();
     const clerk = useClerk();
 
+    const [voiceDialogOpen, setVoiceDialogOpen] = useState(false);
+
     const mainMenuItems: MenuItem[] = [
         {
             title: "Dashboard",
@@ -77,6 +82,7 @@ export function DashboardSidebar() {
         {
             title: "Voice cloning",
             icon: Volume2,
+            onClick: () => setVoiceDialogOpen(true),
         },
     ];
 
@@ -94,67 +100,71 @@ export function DashboardSidebar() {
     ];
 
     return (
-        <Sidebar collapsible="icon">
-            <SidebarHeader className="flex flex-col gap-4 pt-4">
-                <div className="flex items-center gap-2 pl-1 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:pl-0">
-                    <Image src="/logo.svg" alt="Resonance" width={24} height={24} className="rounded-sm" />
-                    <span className="group-data-[collapsible=icon]:hidden font-semibold text-lg tracking-tighter text-foreground">
-                        Resonance
-                    </span>
-                    <SidebarTrigger className="ml-auto lg:hidden" />
-                </div>
-                <SidebarMenu>
-                    <SidebarMenuItem>
-                        <OrganizationSwitcher
-                            hidePersonal
-                            fallback={
-                                <Skeleton className="h-8.5 w-full group-data-[collapsible=icon]:size-8 rounded-md border border-border bg-white" />
-                            }
-                            appearance={{
-                                elements: {
-                                    rootBox: "w-full! group-data-[collapsible=icon]:w-auto! group-data-[collapsible=icon]:flex! group-data-[collapsible=icon]:justify-center!",
-                                    organizationSwitcherTrigger: "w-full! justify-between! bg-white! border! border-border! rounded-md! pl-1! pr-2! py-1! gap-3! group-data-[collapsible=icon]:w-auto! group-data-[collapsible=icon]:p-1! shadow-[0px_1px_1.5px_0px_rgba(44,54,53,0.03)]!",
-                                    organizationPreview: "gap-2!",
-                                    organizationPreviewAvatarBox: "size-6! rounded-sm!",
-                                    organizationPreviewTextContainer: "text-xs! tracking-tight! font-medium! text-foreground! group-data-[collapsible=icon]:hidden!",
-                                    organizationPreviewMainIdentifier: "text-[13px]!",
-                                    organizationSwitcherTriggerIcon: "size-4! text-sidebar-foreground! group-data-[collapsible=icon]:hidden!",
+        <>
+            <VoiceCreateDialog open={voiceDialogOpen} onOpenChange={setVoiceDialogOpen} />
+            <Sidebar collapsible="icon">
+                <SidebarHeader className="flex flex-col gap-4 pt-4">
+                    <div className="flex items-center gap-2 pl-1 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:pl-0">
+                        <Image src="/logo.svg" alt="Resonance" width={24} height={24} className="rounded-sm" />
+                        <span className="group-data-[collapsible=icon]:hidden font-semibold text-lg tracking-tighter text-foreground">
+                            Resonance
+                        </span>
+                        <SidebarTrigger className="ml-auto lg:hidden" />
+                    </div>
+                    <SidebarMenu>
+                        <SidebarMenuItem>
+                            <OrganizationSwitcher
+                                hidePersonal
+                                fallback={
+                                    <Skeleton className="h-8.5 w-full group-data-[collapsible=icon]:size-8 rounded-md border border-border bg-white" />
                                 }
-                            }}
-                        />
-                    </SidebarMenuItem>
-                </SidebarMenu>
-            </SidebarHeader>
-            <div className="border-b border-dashed border-border" />
-            <SidebarContent>
-                <NavSection items={mainMenuItems} pathname={pathname} />
-                <NavSection label="Others" items={othersMenuItems} pathname={pathname} />
-            </SidebarContent>
-            <div className="border-b border-dashed border-border" />
-            <SidebarFooter className="gap-3 py-3">
-                <SidebarMenu>
-                    <SidebarMenuItem>
-                        <UserButton
-                            showName
-                            fallback={
-                                <Skeleton className="h-8.5 w-full group-data-[collapsible=icon]:size-8 rounded-md border border-border bg-white" />
-                            }
-                            appearance={{
-                                elements: {
-                                    rootBox:
-                                        "w-full! group-data-[collapsible=icon]:w-auto! group-data-[collapsible=icon]:flex! group-data-[collapsible=icon]:justify-center!",
-                                    userButtonTrigger:
-                                        "w-full! justify-between! bg-white! border! border-border! rounded-md! pl-1! pr-2! py-1! shadow-[0px_1px_1.5px_0px_rgba(44,54,53,0.03)]! group-data-[collapsible=icon]:w-auto! group-data-[collapsible=icon]:p-1! group-data-[collapsible=icon]:after:hidden! [--border:color-mix(in_srgb,transparent,var(--clerk-color-neutral,#000000)_15%)]!",
-                                    userButtonBox: "flex-row-reverse! gap-2!",
-                                    userButtonOuterIdentifier: "text-[13px]! tracking-tight! font-medium! text-foreground! pl-0! group-data-[collapsible=icon]:hidden!",
-                                    userButtonAvatarBox: "size-6!",
+                                appearance={{
+                                    elements: {
+                                        rootBox: "w-full! group-data-[collapsible=icon]:w-auto! group-data-[collapsible=icon]:flex! group-data-[collapsible=icon]:justify-center!",
+                                        organizationSwitcherTrigger: "w-full! justify-between! bg-white! border! border-border! rounded-md! pl-1! pr-2! py-1! gap-3! group-data-[collapsible=icon]:w-auto! group-data-[collapsible=icon]:p-1! shadow-[0px_1px_1.5px_0px_rgba(44,54,53,0.03)]!",
+                                        organizationPreview: "gap-2!",
+                                        organizationPreviewAvatarBox: "size-6! rounded-sm!",
+                                        organizationPreviewTextContainer: "text-xs! tracking-tight! font-medium! text-foreground! group-data-[collapsible=icon]:hidden!",
+                                        organizationPreviewMainIdentifier: "text-[13px]!",
+                                        organizationSwitcherTriggerIcon: "size-4! text-sidebar-foreground! group-data-[collapsible=icon]:hidden!",
+                                    }
+                                }}
+                            />
+                        </SidebarMenuItem>
+                    </SidebarMenu>
+                </SidebarHeader>
+                <div className="border-b border-dashed border-border" />
+                <SidebarContent>
+                    <NavSection items={mainMenuItems} pathname={pathname} />
+                    <NavSection label="Others" items={othersMenuItems} pathname={pathname} />
+                </SidebarContent>
+                <div className="border-b border-dashed border-border" />
+                <SidebarFooter className="gap-3 py-3">
+                    <UsageContainer />
+                    <SidebarMenu>
+                        <SidebarMenuItem>
+                            <UserButton
+                                showName
+                                fallback={
+                                    <Skeleton className="h-8.5 w-full group-data-[collapsible=icon]:size-8 rounded-md border border-border bg-white" />
                                 }
-                            }}
-                        />
-                    </SidebarMenuItem>
-                </SidebarMenu>
-            </SidebarFooter>
-            <SidebarRail />
-        </Sidebar>
+                                appearance={{
+                                    elements: {
+                                        rootBox:
+                                            "w-full! group-data-[collapsible=icon]:w-auto! group-data-[collapsible=icon]:flex! group-data-[collapsible=icon]:justify-center!",
+                                        userButtonTrigger:
+                                            "w-full! justify-between! bg-white! border! border-border! rounded-md! pl-1! pr-2! py-1! shadow-[0px_1px_1.5px_0px_rgba(44,54,53,0.03)]! group-data-[collapsible=icon]:w-auto! group-data-[collapsible=icon]:p-1! group-data-[collapsible=icon]:after:hidden! [--border:color-mix(in_srgb,transparent,var(--clerk-color-neutral,#000000)_15%)]!",
+                                        userButtonBox: "flex-row-reverse! gap-2!",
+                                        userButtonOuterIdentifier: "text-[13px]! tracking-tight! font-medium! text-foreground! pl-0! group-data-[collapsible=icon]:hidden!",
+                                        userButtonAvatarBox: "size-6!",
+                                    }
+                                }}
+                            />
+                        </SidebarMenuItem>
+                    </SidebarMenu>
+                </SidebarFooter>
+                <SidebarRail />
+            </Sidebar>
+        </>
     );
 }
