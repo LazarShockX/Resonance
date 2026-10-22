@@ -29,7 +29,7 @@ export function TextInputPanel() {
                 <div className="space-y-4 rounded-2xl bg-white p-4 drop-shadow-xs">
                     <Textarea
                         placeholder="Start typing or paste your text here..."
-                        className="min-h-35 resize-none border-0 bg-transparent p-0 shadow-none focus-visible:ring-0"
+                        className="min-h-35 resize-none leading-8 border-0 bg-transparent p-0 shadow-none focus-visible:ring-0"
                         value={text}
                         onChange={(e) => setText(e.target.value)}
                         maxLength={TEXT_MAX_LENGTH}

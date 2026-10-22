@@ -284,7 +284,7 @@ export function VoiceCreateForm({ scrollable, footer, onError }: VoiceCreateForm
             )}
         >
             <div className={cn(
-                scrollable ? "no-scrollbar flex flex-col gap-6 overflow-y-auto px-4" : "flex flex-col gap-6"
+                scrollable ? "no-scrollbar flex flex-col gap-6 overflow-y-auto px-4 lg:px-1" : "flex flex-col gap-6"
             )}>
                 <form.Field name="file">
                     {(field) => {
@@ -355,6 +355,7 @@ export function VoiceCreateForm({ scrollable, footer, onError }: VoiceCreateForm
                 <form.Field name="category">
                     {(field) => {
                         const isInvalid = field.state.meta.isTouched && !field.state.meta.isValid;
+                        const selectedCategory = VOICE_CATEGORIES.find((category) => category === field.state.value);
 
                         return (
                             <Field data-invalid={isInvalid}>
@@ -367,7 +368,9 @@ export function VoiceCreateForm({ scrollable, footer, onError }: VoiceCreateForm
                                         onValueChange={(value) => field.handleChange(value ?? "")}
                                     >
                                         <SelectTrigger className="w-full pl-10">
-                                            <SelectValue placeholder="Select category..." />
+                                            <SelectValue placeholder="Select category...">
+                                                {selectedCategory ? VOICE_CATEGORY_LABELS[selectedCategory] : undefined}
+                                            </SelectValue>
                                         </SelectTrigger>
                                         <SelectContent>
                                             {VOICE_CATEGORIES.map((category) => (

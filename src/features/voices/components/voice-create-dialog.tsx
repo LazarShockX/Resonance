@@ -20,12 +20,12 @@ export function VoiceCreateDialog({ children, open, onOpenChange }: VoiceCreateD
             <Drawer open={open} onOpenChange={onOpenChange}>
                 <DrawerTrigger render={children} />
                 <DrawerContent>
-                    <DrawerHeader>
-                        <DrawerTitle>
+                    <DrawerHeader className="pb-4">
+                        <DrawerTitle className="text-lg font-semibold">
                             Create custom voice
-                        </DrawerTitle>
+                        </DrawerTitle >
                         <DrawerDescription>
-                            Upload or record an audio sample to add a new voice to your library.
+                            Upload or record audio to add a voice.
                         </DrawerDescription>
                     </DrawerHeader>
                     <VoiceCreateForm
@@ -50,9 +50,9 @@ export function VoiceCreateDialog({ children, open, onOpenChange }: VoiceCreateD
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogTrigger render={children} />
-            <DialogContent className="flex min-h-0 max-h-[calc(100dvh-2rem)] flex-col overflow-hidden">
+            <DialogContent className="flex min-h-0 max-h-[calc(100dvh-2rem)] flex-col overflow-hidden sm:max-w-lg">
                 <DialogHeader className="text-left">
-                    <DialogTitle>
+                    <DialogTitle className="text-lg font-semibold">
                         Create custom voice
                     </DialogTitle>
                     <DialogDescription>

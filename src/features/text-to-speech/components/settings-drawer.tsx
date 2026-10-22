@@ -25,7 +25,7 @@ export function SettingsDrawer({ open, onOpenChange, children }: SettingsDrawerP
             )}
             <DrawerContent>
                 <DrawerHeader>
-                    <DrawerTitle>
+                    <DrawerTitle className="text-lg font-semibold">
                         Settings
                     </DrawerTitle>
                 </DrawerHeader>
