@@ -1,6 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { parseBuffer } from "music-metadata";
 import { z } from "zod";
+import { polar } from "@/lib/polar";
 import { prisma } from "@/lib/db";
 import { uploadAudio } from "@/lib/r2";
 import { VOICE_CATEGORIES } from "@/features/voices/data/voice-categories";
@@ -21,6 +22,19 @@ export async function POST(request: Request) {
 
     if (!userId || !orgId) {
         return new Response("Unauthorized", { status: 401 });
+    }
+
+    // Check for active subscription before generation
+    try {
+        const customerState = await polar.customers.getStateExternal(orgId);
+        const hasActiveSubscription = (customerState.active_subscriptions ?? []).length > 0;
+
+        if (!hasActiveSubscription) {
+            return Response.json({ error: "SUBSCRIPTION_REQUIRED" }, { status: 403 });
+        }
+    } catch {
+        // Customer doesn't exist in Polar yet (no subscription)
+        return Response.json({ error: "SUBSCRIPTION_REQUIRED" }, { status: 403 });
     }
 
     const url = new URL(request.url);
@@ -114,6 +128,21 @@ export async function POST(request: Request) {
 
         return Response.json({ error: "Failed to create voice. Please retry." }, { status: 500 });
     }
+
+    // Ingest usage event to Polar (fire-and-forget, don't block response)
+    polar.events.ingest({
+        events: [
+            {
+                name: "voice_creation",
+                external_customer_id: orgId,
+                metadata: {},
+                timestamp: new Date().toISOString(),
+            },
+        ],
+    })
+    .catch(() => {
+        // Silently fail - don't break the user experience for metering errors
+    });
 
     return Response.json({ name, message: "Voice created successfully" }, { status: 201 });
 }
