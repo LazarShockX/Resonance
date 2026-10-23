@@ -47,7 +47,7 @@ next-env.d.ts
 /src/generated/prisma
 
 # system voices
-/scripts/system-voices
+# /scripts/system-voices
 
 # python
 __pycache__
