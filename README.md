@@ -4,6 +4,10 @@ Resonance is an AI-powered text-to-speech and voice cloning platform for creatin
 
 Users can select a voice, write or paste text, tune expressiveness and delivery controls, and generate speech through a Chatterbox TTS API. Resonance stores voice samples and generated audio in Cloudflare R2, persists metadata in PostgreSQL, and uses Polar for subscription and usage-based billing.
 
+<p align="center">
+  <img width="1405" height="713" alt="Screenshot 2026-10-23 at 12 54 33" src="https://github.com/user-attachments/assets/36d35263-5c7c-4491-bfda-c1b02b5540fb" />
+</p>
+
 ## ✨ Features
 
 ### Text-to-Speech Studio
